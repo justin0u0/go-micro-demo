@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package greeter;
+option go_package = "proto;greeter";
+
+service Greeter {
+	// 定義 API Interface，Greet 為此 API 的 Name，
+	// 代表 給 Greet API Request 當參數，並返回 Response
+  rpc Greet(Request) returns (Response) {}
+}
+
+// Request 需要攜帶 type 為 string 的參數 name
+message Request {
+  string name = 1; // 數字不重複即可
+}
+
+// Response 會返回 type 為 string 的參數 greeting
+message Response {
+  string greeting = 2; // 數字不重複即可
+}
+

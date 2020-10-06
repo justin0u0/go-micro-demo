@@ -1,0 +1,40 @@
+version: '3.5'
+
+services:
+  greeter-service:
+    image: greeter-service:latest
+    ports: 
+      - 50051:50051
+    environment:
+      MICRO_SERVER_ADDRESS: ":50051"
+      PARAMS: "--registry etcd --registry_address etcd:2379"
+    networks:
+      - greeter
+    depends_on:
+      - etcd
+  
+  greeter-api-service:
+    image: greeter-api:latest
+    ports:
+      - 3000:3000
+    environment:
+      PARAMS: "--registry etcd --registry_address etcd:2379"
+    networks:
+      - greeter
+    depends_on:
+      - etcd
+  
+  etcd:
+    image: bitnami/etcd:latest
+    environment:
+      - ALLOW_NONE_AUTHENTICATION=yes
+      - ETCD_ADVERTISE_CLIENT_URLS=http://etcd:2379
+    ports:
+      - 2379:2379
+      - 2380:2380
+    networks:
+      - greeter
+
+networks:
+  greeter:
+    driver: bridge
